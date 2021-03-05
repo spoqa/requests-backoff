@@ -1,0 +1,90 @@
+version: 2.1
+
+jobs:
+  test-py27:
+    docker:
+    - image: circleci/python:2.7
+    environment:
+      PYTHON_VERSION: "2.7"
+    working_directory: ~/repo
+    steps: &test-steps
+    - run:
+        name: Install poetry
+        command: |
+          curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py > get-poetry.py
+          python get-poetry.py --yes --version 1.1.4
+          rm -f get-poetry.py
+          echo 'export PATH="$HOME/.poetry/bin:$PATH"' >> $BASH_ENV
+    - checkout
+    - restore_cache:
+        keys:
+        - test-v1-{{ .Environment.PYTHON_VERSION }}-{{ checksum "pyproject.toml" }}-
+        - test-v1-{{ .Environment.PYTHON_VERSION }}-
+    - run:
+        name: Install dependencies
+        command: |
+          python -m virtualenv venv
+          . venv/bin/activate
+          poetry install
+    - save_cache:
+        key: test-v1-{{ .Environment.PYTHON_VERSION }}-{{ checksum "pyproject.toml" }}-{{ epoch }}
+        paths:
+        - ./venv
+    - run:
+        name: Test
+        command: |
+          . venv/bin/activate
+          pytest -vv --junitxml=/tmp/test-results/pytest/unittest.xml
+    - store_test_results:
+        path: /tmp/test-results
+
+  test-py35:
+    docker:
+    - image: circleci/python:3.5
+    environment:
+      PYTHON_VERSION: "3.5"
+    working_directory: ~/repo
+    steps: *test-steps
+
+  test-py36:
+    docker:
+    - image: circleci/python:3.6
+    environment:
+      PYTHON_VERSION: "3.6"
+    working_directory: ~/repo
+    steps: *test-steps
+
+  test-py37:
+    docker:
+    - image: circleci/python:3.7
+    environment:
+      PYTHON_VERSION: "3.7"
+    working_directory: ~/repo
+    steps: *test-steps
+
+  test-py38:
+    docker:
+    - image: circleci/python:3.8
+    environment:
+      PYTHON_VERSION: "3.8"
+    working_directory: ~/repo
+    steps: *test-steps
+
+  test-py39:
+    docker:
+    - image: circleci/python:3.9
+    environment:
+      PYTHON_VERSION: "3.9"
+    working_directory: ~/repo
+    steps: *test-steps
+
+workflows:
+  version: 2
+  test:
+    jobs:
+    - test-py27
+    - test-py35
+    - test-py36
+    - test-py37
+    - test-py38
+    - test-py39
