@@ -37,7 +37,7 @@ class BackoffSession(Session):
                        give up when HTTP status code is client error.
 
         """
-        super().__init__()
+        super(BackoffSession, self).__init__()
         self.exception = exception
         self.max_tries = max_tries
         self.max_time = max_time
