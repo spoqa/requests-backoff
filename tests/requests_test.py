@@ -1,11 +1,9 @@
-import unittest.mock
-
 from backoff import on_exception
 from spoqa_requests_backoff import BackoffSession
 
 
-@unittest.mock.patch('time.sleep')
-def test_500(_mock_sleep, requests_mock):
+def test_500(mocker, requests_mock):
+    mocker.patch('time.sleep')
     requests_mock.get('http://test.com/', status_code=500)
 
     response = BackoffSession().request('GET', 'http://test.com/')
@@ -13,8 +11,8 @@ def test_500(_mock_sleep, requests_mock):
     assert response.status_code == 500
 
 
-@unittest.mock.patch('time.sleep')
-def test_400(_mock_sleep, requests_mock):
+def test_400(mocker, requests_mock):
+    mocker.patch('time.sleep')
     requests_mock.get('http://test.com/', status_code=400)
 
     response = BackoffSession().request('GET', 'http://test.com/')
@@ -22,9 +20,12 @@ def test_400(_mock_sleep, requests_mock):
     assert response.status_code == 400
 
 
-@unittest.mock.patch('spoqa_requests_backoff.on_exception', wraps=on_exception)
-@unittest.mock.patch('time.sleep')
-def test_on_exception(_mock_sleep, mock_on_exception, requests_mock):
+def test_on_exception(mocker, requests_mock):
+    mocker.patch('time.sleep')
+    mock_on_exception = mocker.patch(
+        'spoqa_requests_backoff.on_exception',
+        wraps=on_exception,
+    )
     requests_mock.get('http://test.com/')
 
     BackoffSession(ValueError, 123, 456).get('http://test.com/')
