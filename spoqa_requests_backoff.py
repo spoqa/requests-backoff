@@ -44,7 +44,7 @@ class BackoffSession(Session):
         self.giveup = giveup or giveup_on_client_errors
 
     def request(self, *args, **kwargs):
-        _request = super().request
+        _request = super(BackoffSession, self).request
 
         @on_exception(
             wait_gen=expo,
