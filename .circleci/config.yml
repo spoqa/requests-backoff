@@ -19,6 +19,7 @@ jobs:
           python -m virtualenv venv
           . venv/bin/activate
           poetry install
+          poetry update
     - save_cache:
         key: test-v1-{{ .Environment.PYTHON_VERSION }}-{{ checksum "pyproject.toml" }}-{{ epoch }}
         paths:
