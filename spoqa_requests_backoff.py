@@ -4,7 +4,7 @@ except ImportError:
     pass
 
 from backoff import expo, full_jitter, on_exception
-from requests import RequestException, Session
+from requests import RequestException, Response, Session
 
 
 def giveup_on_client_errors(e):
@@ -44,6 +44,7 @@ class BackoffSession(Session):
         self.giveup = giveup or giveup_on_client_errors
 
     def request(self, *args, **kwargs):
+        # type: (...) -> Response
         _request = super(BackoffSession, self).request
 
         @on_exception(
