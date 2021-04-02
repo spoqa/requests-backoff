@@ -8,7 +8,7 @@ from requests import RequestException, Session
 
 
 def giveup_on_client_errors(e):
-    # type: (RequestException) -> None
+    # type: (RequestException) -> bool
     return e.response is not None and 400 <= e.response.status_code < 500
 
 
