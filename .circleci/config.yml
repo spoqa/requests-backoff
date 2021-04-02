@@ -16,7 +16,11 @@ jobs:
     - run:
         name: Install dependencies
         command: |
-          python -m virtualenv venv
+          if [ "${PYTHON_VERSION}" = "2.7" ]; then
+            python -mvirtualenv venv
+          else
+            python -mvenv venv
+          fi
           . venv/bin/activate
           poetry install
           poetry update
