@@ -17,9 +17,9 @@ python = "~2.7 || ^3.5"
 
 backoff = "^1.10.0"
 requests = "^2.25.1"
-"backports.functools_lru_cache" = "!=1.6.2,!=1.6.3" # https://github.com/jaraco/backports.functools_lru_cache/pull/16
 
 [tool.poetry.dev-dependencies]
+"backports.functools_lru_cache" = "!=1.6.2,!=1.6.3" # https://github.com/jaraco/backports.functools_lru_cache/pull/16
 flake8 = "^3.8.4"
 flake8-import-order-spoqa = "^1.5.0"
 pytest = "^4.6"
