@@ -8,11 +8,13 @@ jobs:
       PYTHON_VERSION: "2.7"
     working_directory: ~/repo
     steps: &test-steps
+    # https://devops.stackexchange.com/questions/9147/how-to-get-other-than-no-value-when-interpolating-environment-some-var/9177
+    - run: echo "${PYTHON_VERSION}" > /tmp/python_version
     - checkout
     - restore_cache:
         keys:
-        - test-v1-{{ .Environment.PYTHON_VERSION }}-{{ checksum "pyproject.toml" }}-
-        - test-v1-{{ .Environment.PYTHON_VERSION }}-
+        - test-v1-{{ checksum "/tmp/python_version" }}-{{ checksum "pyproject.toml" }}-
+        - test-v1-{{ checksum "/tmp/python_version" }}-
     - run:
         name: Install dependencies
         command: |
@@ -25,7 +27,7 @@ jobs:
           poetry install
           poetry update
     - save_cache:
-        key: test-v1-{{ .Environment.PYTHON_VERSION }}-{{ checksum "pyproject.toml" }}-{{ epoch }}
+        key: test-v1-{{ checksum "/tmp/python_version" }}-{{ checksum "pyproject.toml" }}-{{ epoch }}
         paths:
         - ./venv
     - run:
