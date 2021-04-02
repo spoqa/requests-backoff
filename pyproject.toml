@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spoqa-requests-backoff"
-version = "0.1.0"
+version = "0.1.1"
 description = "Backoff Session for requests"
 authors = ["Spoqa Creators <dev@spoqa.com>"]
 maintainers = ["rusty <rusty@spoqa.com>"]
